@@ -984,6 +984,28 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@ionic/core@5.8.4":
+  version "5.8.4"
+  resolved "https://registry.yarnpkg.com/@ionic/core/-/core-5.8.4.tgz#24c1e4b364628d59af579fceba79be8ff019b475"
+  integrity sha512-ioaH7wXAtexcpk23III0KArjSXStkpPrpZ5BCNkyter3EbOmDVd8XIXRcT86zRG68rbGI7Pd9GrugxeaDyMk/g==
+  dependencies:
+    "@stencil/core" "^2.4.0"
+    ionicons "^5.5.3"
+    tslib "^2.1.0"
+
+"@ionic/vue-router@^5.8.4":
+  version "5.8.4"
+  resolved "https://registry.yarnpkg.com/@ionic/vue-router/-/vue-router-5.8.4.tgz#739d1de6dcf77c625f5406e46e7377ccdfb59ad0"
+  integrity sha512-A/kjHqg8KE4ZA62uXsfufe5xY8KgYU4MRJjg3OWlJsNNOsHQRlcftHk8AHmHnsHM9fp6KwCNom5ev8RGKBVPMA==
+
+"@ionic/vue@^5.8.4":
+  version "5.8.4"
+  resolved "https://registry.yarnpkg.com/@ionic/vue/-/vue-5.8.4.tgz#ba63f8cd3f47e9acf4e339fbaf378014e72e5cdc"
+  integrity sha512-sIcPQU8FEHTKGP7CQ5czM/Ab7JM773iHcxWPRRLvDq1ooY6aWpjYSYuhzRPLUmbQCY7AqAx+e/mRg2upjsNcDQ==
+  dependencies:
+    "@ionic/core" "5.8.4"
+    ionicons "^5.1.2"
+
 "@malept/cross-spawn-promise@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@malept/cross-spawn-promise/-/cross-spawn-promise-1.1.1.tgz#504af200af6b98e198bce768bc1730c6936ae01d"
@@ -1041,6 +1063,11 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
+
+"@stencil/core@^2.4.0", "@stencil/core@^2.5.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.9.0.tgz#cbac84b996475b8fc983931539ed1261174e2df3"
+  integrity sha512-kY3xYolZoJO1MKslL0NQccHy72R3TIl1prHgfmIrEoGcnMgc6uiskdWaGMuI5/sCGz9T+QuTVz76B1H2ySyBZg==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -5702,6 +5729,13 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
+
+ionicons@^5.1.2, ionicons@^5.5.3:
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-5.5.3.tgz#33cfc4c8a590ac45895f2b10309ef4586ed244c1"
+  integrity sha512-L71djrMi8pAad66tpwdnO1vwcyluCFvehzxU1PpH1k/HpYBZhZ5IaYhqXipmqUvu5aEbd4cbRguYyI5Fd4bxTw==
+  dependencies:
+    "@stencil/core" "^2.5.0"
 
 ip-regex@^2.1.0:
   version "2.1.0"

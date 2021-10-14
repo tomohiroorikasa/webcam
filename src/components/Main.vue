@@ -1,5 +1,5 @@
 <template lang="pug">
-.text-center
+.content
   img(ref="image")
 </template>
 
@@ -15,7 +15,6 @@ export default {
   mounted () {
     window.api.receive('refresh', (image) => {
       // console.log('main\'s refresh')
-
       this.$refs.image.src = image
     })
   },
@@ -25,4 +24,9 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.content
+  background-color #ccc
+  width 100vw
+  img
+    width 100%
 </style>
