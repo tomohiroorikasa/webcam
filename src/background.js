@@ -5,6 +5,8 @@ import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 
+import { cloneDeep } from 'lodash'
+
 import fs from 'fs'
 import path from 'path'
 
@@ -12,9 +14,9 @@ import urlJoin from 'url-join'
 
 import axios from 'axios'
 
-// import log from 'electron-log'
+import log from 'electron-log'
 
-// const onvif = require('node-onvif')
+const onvif = require('node-onvif')
 
 const sharp = require('sharp')
 
@@ -49,53 +51,48 @@ async function createWindow() {
 
 let activated = false
 
+const cameras = []
+
 async function init () {
-  /*
-  onvif.startProbe().then((deviceInfos) => {
+  await onvif.startProbe().then((deviceInfos) => {
     deviceInfos.forEach(async (deviceInfo) => {
       const device = new onvif.OnvifDevice({
         xaddr: deviceInfo.xaddrs[0]
       })
 
-      let cameraInfo = cameras.find((camera) => {
-        return camera.addr === device.address
+      let cameraInfo = {}
+
+      cameraInfo.ready = false
+
+      cameraInfo._location = deviceInfo.location
+      cameraInfo._hardware = deviceInfo.hardware
+      cameraInfo._name = deviceInfo.name
+      cameraInfo._xaddrs = deviceInfo.xaddrs
+      cameraInfo._xaddr = deviceInfo.xaddrs[0]
+      cameraInfo._scopes = deviceInfo.scopes
+      cameraInfo._types = deviceInfo.types
+      cameraInfo._address = device.address
+
+      cameraInfo.device = new onvif.OnvifDevice({
+        xaddr: cameraInfo._xaddr,
+        user: 'admin',
+        pass: 'admin'
       })
 
-      if (!cameraInfo) {
-        cameraInfo.ready = false
+      cameraInfo.device.init()
+        .then((info) => {
+          cameraInfo.ready = true
+          cameraInfo.info = cloneDeep(info)
 
-        log.warn(`${device.address} is decide`)
-      } else {
-        cameraInfo.ready = false
-
-        cameraInfo._location = deviceInfo.location
-        cameraInfo._hardware = deviceInfo.hardware
-        cameraInfo._name = deviceInfo.name
-        cameraInfo._xaddrs = deviceInfo.xaddrs
-        cameraInfo._xaddr = deviceInfo.xaddrs[0]
-        cameraInfo._scopes = deviceInfo.scopes
-        cameraInfo._types = deviceInfo.types
-        cameraInfo._address = device.address
-
-        cameraInfo.device = new onvif.OnvifDevice({
-          xaddr: cameraInfo._xaddr,
-          user: cameraInfo.user,
-          pass: cameraInfo.pass
+          cameraInfo.profile = cloneDeep(cameraInfo.device.getCurrentProfile())
+        })
+        .catch((err) => {
+          throw err
         })
 
-        cameraInfo.device.init()
-          .then((info) => {
-            cameraInfo.ready = true
-            cameraInfo.info = cloneDeep(info)
+      log.info(`${device.address} is found`)
 
-            cameraInfo.profile = cloneDeep(cameraInfo.device.getCurrentProfile())
-          })
-          .catch((err) => {
-            throw err
-          })
-
-        log.info(`${device.address} is found`)
-      }
+      cameras.push(cameraInfo)
     })
   }).catch((err) => {
     log.error('electron:event:notOnvifStartProbe')
@@ -103,7 +100,6 @@ async function init () {
     log.error(err.stack)
     console.error(err)
   })
-  */
 
   activated = true
 }
@@ -117,28 +113,15 @@ async function timer() {
 }
 
 async function fetch() {
-  // console.log('background\'s fetch')
+  if (cameras.length === 0) { return }
 
-  // ここにネットワークカメラの画像を取得してくる処理
+  const camera = cameras[0]
+  if (camera.ready) {
+    const snapshot = await camera.device.fetchSnapshot()
+    const b64encoded = Buffer.from(snapshot.body).toString('base64')
 
-  // 適当な画像を作る処理
-  const r = Math.floor(Math.random() * 255)
-  const g = Math.floor(Math.random() * 255)
-  const b = Math.floor(Math.random() * 255)
-  const alpha = Math.random()
-
-  const imageBinary = await sharp({
-    create: {
-      width: 200,
-      height: 100,
-      channels: 4,
-      background: { r: r, g: g, b: b, alpha: alpha }
-    }
-  }).png().toBuffer()
-
-  const base64encode = Buffer.from(imageBinary).toString('base64')
-
-  win.webContents.send('refresh', `data:image/png;base64,${base64encode}`)
+    win.webContents.send('refresh', `data:image/png;base64,${b64encoded}`)
+  }
 }
 
 app.on('window-all-closed', () => {
@@ -180,12 +163,3 @@ if (isDevelopment) {
     })
   }
 }
-
-ipcMain.on('test', (event, arg) => {
-  if (!process.env.IMAGE_DIR) {
-    console.error('Not Found Image Directory')
-  } else {
-    console.log('Found Image Directory')
-  }
-  win.webContents.send('test', 'responce')
-})
