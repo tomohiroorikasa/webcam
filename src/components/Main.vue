@@ -1,5 +1,6 @@
 <template lang="pug">
 .text-center
+  img(ref="image")
 </template>
 
 <script>
@@ -12,6 +13,11 @@ export default {
     }
   },
   mounted () {
+    window.api.receive('refresh', (image) => {
+      // console.log('main\'s refresh')
+
+      this.$refs.image.src = image
+    })
   },
   methods: {
   }
